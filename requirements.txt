@@ -1,0 +1,13 @@
+ffmpeg-python==0.2.0
+opencv-python==4.11.0.86
+faster-whisper==1.1.1
+fastapi==0.115.12
+uvicorn==0.34.2
+SQLAlchemy==2.0.40
+PyMySQL==1.1.1
+alembic==1.15.2
+python-dotenv==1.1.0
+python-multipart==0.0.20
+fastapi-admin
+
+
