@@ -48,6 +48,17 @@ class VideoSettings:
         "highlight_scene": "Highlight the key scenes with text overlays.",
     }
 
+    VIDEO_FILE = "video.mp4"
+    TEMP_CLIPS_DIR = "temp/clips"
+    OUTPUT_DIR = "output"
+    TEMP_AUDIO_FILE_PATH = "temp/audio.wav"
+    TEMP_SRT_FILE_PATH = "temp/output.srt"
+    TEMP_ASS_FILE_PATH = "temp/output.ass"
+
+    MAX_WORDS_PER_SUBTITLE = 4 
+
+    WHISPER_MODEL = "base"
+
     @classmethod
     def get_aspect_ratios(cls):
         """Returns the list of available aspect ratios."""
