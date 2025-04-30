@@ -9,3 +9,5 @@ alembic==1.15.2
 python-dotenv==1.1.0
 python-multipart==0.0.20
 asgiref==3.8.1
+google-generativeai
+whisper-timestamped

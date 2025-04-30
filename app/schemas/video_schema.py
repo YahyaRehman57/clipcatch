@@ -1,6 +1,6 @@
 import re
 from pydantic import BaseModel, field_validator
-from typing import List, Optional, Dict
+from typing import List, Optional, Dict, Union
 from app.core.config import VideoSettings
 from urllib.parse import urlparse
 
@@ -9,10 +9,12 @@ class VideoEditRequest(BaseModel):
 
     video_url: str
     webhook_url: str
-    aspect_ratio: Optional[str] = "16:9"
+    max_words_per_subtitle: int = VideoSettings.MAX_WORDS_PER_SUBTITLE
+    aspect_ratios: Optional[List[str]] = ["16:9"]
     selected_font: Optional[str] = VideoSettings.DEFAULT_FONT
-    font_size: Optional[Dict[str, int]] = {}
-    highlighted_words: Optional[Dict[str, Optional[str]]] = {}
+    font_sizes: Optional[Dict[str, int]] = {}
+    # highlighted_words: Optional[Dict[str, Optional[str]]] = {}
+    highlighted_words: Optional[Union[Dict[str, Optional[str]], List[str]]] = {}
     highlight_colors: Optional[List[str]] = []
     is_full_video_edit: Optional[bool] = True
     
@@ -33,8 +35,8 @@ class VideoEditRequest(BaseModel):
             raise ValueError("video_url must be a valid HTTP or HTTPS URL.")
         return v
     
-    @field_validator('font_size')
-    def validate_font_size_keys(cls, v):
+    @field_validator('font_sizes')
+    def validate_font_sizes_keys(cls, v):
         if v:
             valid_aspect_ratios = VideoSettings.get_aspect_ratios()
             for ratio in v.keys():
@@ -43,11 +45,12 @@ class VideoEditRequest(BaseModel):
         return v
 
 
-    @field_validator('aspect_ratio')
-    def validate_aspect_ratio(cls, v):
+    @field_validator('aspect_ratios')
+    def validate_aspect_ratios(cls, v: List[str]) -> List[str]:
         default_aspect_ratios = VideoSettings.get_aspect_ratios()
-        if v not in default_aspect_ratios:
-            raise ValueError(f"Aspect ratio must be one of: {', '.join(default_aspect_ratios)}")
+        invalid = [ratio for ratio in v if ratio not in default_aspect_ratios]
+        if invalid:
+            raise ValueError(f"Invalid aspect ratios: {', '.join(invalid)}. Must be one of: {', '.join(default_aspect_ratios)}")
         return v
 
     @field_validator('selected_font')
@@ -60,9 +63,18 @@ class VideoEditRequest(BaseModel):
     @field_validator('highlighted_words')
     def validate_highlighted_words(cls, v, values):
         if v:
-            for word, color in v.items():
-                if color is not None and (not isinstance(color, str) or not re.match(VideoSettings.COLOR_REGEX, color)):
-                    raise ValueError(f"Invalid color format: {color}. It must be in the format &HXXXXXX&")
+            if isinstance(v, dict):
+                for word, color in v.items():
+                    if color is not None and (not isinstance(color, str) or not re.match(VideoSettings.COLOR_REGEX, color)):
+                        raise ValueError(f"Invalid color format: {color}. It must be in the format &HXXXXXX&")
+            elif isinstance(v, list):
+                for word in v:
+                    if not isinstance(word, str):
+                        raise ValueError("All items in the list must be strings.")
+                    if re.match(VideoSettings.COLOR_REGEX, word):
+                        raise ValueError(f"Invalid word: {word}. Words must not be color codes.")
+            else:
+                raise TypeError("highlighted_words must be either a dict or a list.")
         return v
 
     @field_validator('highlight_colors')
@@ -83,7 +95,7 @@ class VideoEditRequest(BaseModel):
             "example": {
                 "video_url": "https://example.com/sample-video.mp4",
                 "webhook_url": "https://example.com/webhook",
-                "aspect_ratio": "9:16",
+                "aspect_ratios": ["9:16"],
                 "selected_font": "Arial",
                 "font_size": {
                     "9:16": 20

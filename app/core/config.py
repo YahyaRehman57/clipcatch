@@ -1,7 +1,10 @@
+import os
 from typing import List, Dict
+# from app.main import BASE_DIR
 
 
 class VideoSettings:
+    BASE_URL = "http://localhost:8000"
     DEFAULT_ASPECT_RATIOS: List[str] = ["16:9", "4:3", "1:1", "9:16", "21:9"]
 
     # Default font and font sizes
@@ -9,15 +12,14 @@ class VideoSettings:
 
     # Define default font sizes for each aspect ratio
     DEFAULT_FONT_SIZES: Dict[str, int] = {
-        "16:9": 16,  # Default font size for 16:9 aspect ratio
-        "4:3": 14,  # Default font size for 4:3 aspect ratio
+        "16:9": 22,  # Default font size for 16:9 aspect ratio
+        "4:3": 20,  # Default font size for 4:3 aspect ratio
         "1:1": 18,  # Default font size for 1:1 aspect ratio
         "9:16": 20,  # Default font size for 9:16 aspect ratio (vertical)
         "21:9": 22,  # Default font size for 21:9 aspect ratio
     }
 
     HIGHLIGHT_COLORS: List[str] = [
-        "&HFF0000&",  # red
         "&H00FF00&",  # green
         "&H0000FF&",  # blue
         "&HFFFF00&",  # yellow
@@ -25,8 +27,6 @@ class VideoSettings:
         "&H00FFFF&",  # cyan
         "&HFFA500&",  # orange
         "&H800080&",  # purple
-        "&HFFFFFF&",  # white
-        "&H000000&",  # black
         "&H808080&",  # gray
         "&HFFD700&",  # gold
     ]
@@ -35,6 +35,7 @@ class VideoSettings:
 
     AVAILABLE_FONTS: List[str] = [
         "Arial",
+        "Luckiest Guy",
         "Helvetica",
         "Times New Roman",
         "Courier New",
@@ -58,6 +59,10 @@ class VideoSettings:
     MAX_WORDS_PER_SUBTITLE = 4 
 
     WHISPER_MODEL = "base"
+
+    STATIC_DIR = os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "..", "..", "static")
+    )
 
     @classmethod
     def get_aspect_ratios(cls):
@@ -101,3 +106,20 @@ class VideoSettings:
         """Removes an AI prompt from the list."""
         if key in cls.AI_PROMPTS:
             del cls.AI_PROMPTS[key]
+
+    @classmethod
+    def generate_ass_header(cls, selected_font: str, font_size: int) -> str:
+        return f"""[Script Info]
+            Title: Highlighted Subtitles
+            ScriptType: v4.00+
+            Collisions: Normal
+            PlayDepth: 0
+
+            [V4+ Styles]
+            Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+            Style: Default,{selected_font},{font_size},&H00FFFFFF,&H0000FFFF,&H00000000,&H00000000,-1,0,0,0,100,100,0,0,1,2,2,2,50,50,50,1
+
+            [Events]
+            Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+        """
+

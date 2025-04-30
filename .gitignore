@@ -1,6 +1,8 @@
 ./scripts/
 venv
 logs/
+test/
+media/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
