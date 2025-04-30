@@ -11,3 +11,5 @@ python-multipart==0.0.20
 asgiref==3.8.1
 google-generativeai
 whisper-timestamped
+opencv-python==4.11.0.86
+
