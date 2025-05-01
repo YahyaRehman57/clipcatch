@@ -21,6 +21,12 @@ class VideoEditRequest(BaseModel):
     # It will be sent as it is in the webhook the goal is to identify the reuqest
     metadata: Optional[Dict[str, str]] = {}
 
+    @field_validator('max_words_per_subtitle')
+    def validate_max_words_per_subtitle(cls, v):
+        if v < 3:
+            raise ValueError("max_words_per_subtitle must be greater then 3.")
+        return v
+
     @field_validator('video_url')
     def validate_video_url(cls, v):
         parsed = urlparse(v)
