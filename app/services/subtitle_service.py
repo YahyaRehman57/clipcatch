@@ -52,7 +52,7 @@ class SubtitleService:
         print(f"[*] Audio extracted to {output_audio_path}")
 
         audio = whisper.load_audio(output_audio_path)
-        model = whisper.load_model("small", device="cpu")
+        model = whisper.load_model("base", device="cpu")
         result = whisper.transcribe(model, audio, language="en")
 
         srt_lines = []
