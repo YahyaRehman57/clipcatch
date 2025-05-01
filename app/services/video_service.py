@@ -216,7 +216,7 @@ class VideoService:
                         aspect_ratio=aspect_ratio
                     )
                     cls.LOGGER.info(f"Final output for {aspect_ratio}: {video_output}")
-                    video_url = f"{VideoSettings.BASE_URL}{video_output}"
+                    video_url = f"{VideoSettings.BASE_URL}/{video_output}"
                     output_videos.append(WebhookVideo(video_url=video_url, aspect_ratio=aspect_ratio))
                 except Exception as e:
                     cls.LOGGER.error(f"[Step 5] Burning subtitle failed for {aspect_ratio}: {e} Video path is : {video_path}")

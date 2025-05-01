@@ -6,11 +6,16 @@ from fastapi.responses import JSONResponse
 from pathlib import Path
 from fastapi.staticfiles import StaticFiles
 from app.utils.file_opearations_utils import build_directory_tree
+from dotenv import load_dotenv
+
+
 
 clipcatch_app = FastAPI(
     title="ClipCatch API",
     version="2.0.3"
 )
+load_dotenv()
+
 MEDIA_DIR = Path("media")
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
