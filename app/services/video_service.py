@@ -166,8 +166,11 @@ class VideoService:
                 cls.LOGGER.info("Full video edit — basic SRT analysis.")
                 response = GeminiService().analyze_srt_basic(srt_content=srt_content, color_list=highlight_colors)
                 if isinstance(response, list):
+                    cls.LOGGER.debug("Incoming response is a list")
                     highlighted_words = {cw.word: cw.color for cw in response}
                     cls.LOGGER.debug(f"Highlighted words: {highlighted_words}")
+                else:
+                    cls.LOGGER.debug("Incoming response is not a list")
 
             output_videos = []
 
