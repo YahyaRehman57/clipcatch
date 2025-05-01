@@ -1,3 +1,5 @@
+uvicorn==0.34.2
+pydantic==2.11.4
 ffmpeg-python==0.2.0
 opencv-python==4.11.0.86
 faster-whisper==1.1.1
@@ -11,4 +13,3 @@ python-multipart==0.0.20
 asgiref==3.8.1
 google-generativeai
 whisper-timestamped
-uvicorn==0.34.2
