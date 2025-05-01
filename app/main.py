@@ -12,6 +12,14 @@ clipcatch_app = FastAPI(
 )
 MEDIA_DIR = Path("media")
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+MEDIA_DIR = Path(BASE_DIR) / "media"
+FONTS_DIR = Path(BASE_DIR) / "static" / "fonts"
+
+# Ensure directories exist
+MEDIA_DIR.mkdir(parents=True, exist_ok=True)
+FONTS_DIR.mkdir(parents=True, exist_ok=True)
+
 clipcatch_app.include_router(video_edit.router, prefix="/api/video", tags=["Video Editor"])
 clipcatch_app.mount("/fonts", StaticFiles(directory="static/fonts"), name="fonts")
 clipcatch_app.mount("/media", StaticFiles(directory="media"), name="media")
