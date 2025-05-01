@@ -113,8 +113,7 @@ class GeminiService:
     """
 
     def __init__(self, max_retries: int = 3, retry_delay: int = 2):
-        # api_key = os.getenv('GENAI_API_KEY')
-        api_key = "AIzaSyBFfBsJ_usL_gEEGlOS2foLl39rbZSdjkY"
+        api_key = os.getenv('GEMINI_API_KEY')
         genai.configure(api_key=api_key)
 
         self.model = genai.GenerativeModel('models/gemini-1.5-flash')
@@ -130,34 +129,8 @@ class GeminiService:
                 if attempt == self.max_retries:
                     return f"Error after {self.max_retries} retries: {str(e)}"
                 else:
-                    print(f"Attempt {attempt} failed: {e}. Retrying in {self.retry_delay} seconds...")
+                    self.LOGGER.debug(f"Attempt {attempt} failed: {e}. Retrying in {self.retry_delay} seconds...")
                     time.sleep(self.retry_delay)
-
-    # def analyze_srt_basic(self, srt_content: str, color_list: List[str]) -> List[ColoredWord]:
-    #     colors = json.dumps(color_list)
-    #     prompt = self.BASIC_PROMPT_TEMPLATE.format(srt_content=srt_content, colors=colors)
-    #     response = self._generate_with_retry(prompt)
-    #     cleaned = re.sub(r"^```json|```$", "", response.strip(), flags=re.MULTILINE).strip()
-    #     try:
-    #         parsed = json.loads(cleaned)
-    #         return [ColoredWord(**item) for item in parsed]
-    #     except (json.JSONDecodeError, ValidationError) as e:
-    #         print(f"Error parsing basic response: {e}")
-    #         return []
-
-    # def analyze_srt_advanced(self, srt_content: str, color_list: List[str]) -> Union[AdvancedSRTResponse, dict]:
-    #     colors = json.dumps(color_list)
-    #     prompt = self.ADVANCED_PROMPT_TEMPLATE.format(srt_content=srt_content, colors=colors)
-    #     response = self._generate_with_retry(prompt)
-    #     cleaned = re.sub(r"^```json|```$", "", response.strip(), flags=re.MULTILINE).strip()
-
-
-    #     try:
-    #         parsed = json.loads(cleaned)
-    #         return AdvancedSRTResponse(**parsed)
-    #     except (json.JSONDecodeError, ValidationError) as e:
-    #         print(f"Error parsing advanced response: {e}")
-    #         return {"raw_response": response}
 
     def _generate_with_retry(self, prompt: str) -> str:
         self.LOGGER.info("Generating content with retry logic")

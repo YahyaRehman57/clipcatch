@@ -30,7 +30,6 @@ clipcatch_app.mount("/media", StaticFiles(directory="media"), name="media")
 
 
 
-
 @clipcatch_app.get("/media-tree")
 def get_media_tree():
     if MEDIA_DIR.exists():
@@ -59,9 +58,3 @@ def download_log_file(filename: str):
         filename=filename,
         media_type="application/octet-stream"
     )
-
-
-@clipcatch_app.post("/webhook")
-def webhook(data):
-    print("data is : ", data)
-    return JSONResponse(status_code=200)

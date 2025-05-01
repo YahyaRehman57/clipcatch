@@ -49,10 +49,9 @@ class SubtitleService:
             .overwrite_output()
             .run()
         )
-        print(f"[*] Audio extracted to {output_audio_path}")
 
         audio = whisper.load_audio(output_audio_path)
-        model = whisper.load_model("base", device="cpu")
+        model = whisper.load_model(VideoSettings.WHISPER_MODEL, device="cpu")
         result = whisper.transcribe(model, audio, language="en")
 
         srt_lines = []
@@ -128,7 +127,6 @@ class SubtitleService:
             f.write(ass_header)
 
             for sub in subtitles:
-                print("Sub is : ", sub)
                 start = cls.srt_to_ass_timestamp(sub['start'])
                 end = cls.srt_to_ass_timestamp(sub['end'])
                 text = sub['text']

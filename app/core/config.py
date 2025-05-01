@@ -1,10 +1,8 @@
 import os
 from typing import List, Dict
-# from app.main import BASE_DIR
-
 
 class VideoSettings:
-    BASE_URL = "http://localhost:8000"
+    BASE_URL = os.getenv("API_URL", "")
     DEFAULT_ASPECT_RATIOS: List[str] = ["16:9", "4:3", "1:1", "9:16", "21:9"]
 
     # Default font and font sizes
@@ -12,11 +10,11 @@ class VideoSettings:
 
     # Define default font sizes for each aspect ratio
     DEFAULT_FONT_SIZES: Dict[str, int] = {
-        "16:9": 22,  # Default font size for 16:9 aspect ratio
-        "4:3": 20,  # Default font size for 4:3 aspect ratio
-        "1:1": 18,  # Default font size for 1:1 aspect ratio
-        "9:16": 20,  # Default font size for 9:16 aspect ratio (vertical)
-        "21:9": 22,  # Default font size for 21:9 aspect ratio
+        "16:9": 22,
+        "4:3": 20,
+        "1:1": 18,
+        "9:16": 20,
+        "21:9": 22,
     }
 
     HIGHLIGHT_COLORS: List[str] = [

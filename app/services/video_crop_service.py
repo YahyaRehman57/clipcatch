@@ -40,7 +40,7 @@ class VideoCropService:
 
         center_x, center_y = cls.detect_main_object(frame)
         target_w = width
-        print("Aspect ratio is : ", aspect_ratio)
+
         w, h = map(int, aspect_ratio.split(":"))
         target_h = int(width * h / w)
 
@@ -107,7 +107,6 @@ class VideoCropService:
                 .run(overwrite_output=True, quiet=True)
             )
             os.replace(temp_path, video_file_path)
-            print(f"Video trimmed successfully: {video_file_path}")
         except ffmpeg.Error as e:
             os.remove(temp_path)
             raise RuntimeError(f"Failed to trim video: {e.stderr.decode()}") from e
@@ -119,8 +118,6 @@ class VideoCropService:
         ass_filter = f"ass='{ass_path_fixed}'"
 
         fonts_dir = os.path.join(VideoSettings.STATIC_DIR, "fonts").replace("\\", "/")
-        print("Ass filter is : ", ass_filter)
-        print("fonts dir is : ", fonts_dir)
         if fonts_dir:
             ass_filter += f":fontsdir={fonts_dir}"
 
@@ -144,4 +141,3 @@ class VideoCropService:
             .run()
         )
         return output_video_path
-

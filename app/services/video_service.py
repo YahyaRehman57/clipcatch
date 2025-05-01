@@ -80,10 +80,10 @@ class VideoService:
             with open(srt_file_path, 'r', encoding='utf-8') as f:
                 return f.read()
         except FileNotFoundError:
-            print(f"File not found: {srt_file_path}")
+            cls.LOGGER.info(f"File not found: {srt_file_path}")
             return ""
         except Exception as e:
-            print(f"Error reading file {srt_file_path}: {e}")
+            cls.LOGGER.info(f"Error reading file {srt_file_path}: {e}")
             return ""
 
     @classmethod
