@@ -1,6 +1,6 @@
 import re
 from pydantic import BaseModel, field_validator
-from typing import List, Optional, Dict, Union
+from typing import List, Optional, Dict, Any
 from app.core.config import VideoSettings
 from urllib.parse import urlparse
 
@@ -14,12 +14,19 @@ class VideoEditRequest(BaseModel):
     selected_font: Optional[str] = VideoSettings.DEFAULT_FONT
     font_sizes: Optional[Dict[str, int]] = {}
     # highlighted_words: Optional[Dict[str, Optional[str]]] = {}
-    highlighted_words: Optional[Union[Dict[str, Optional[str]], List[str]]] = {}
+    # highlighted_words: Optional[Union[Dict[str, Optional[str]], List[str]]] = {}
     highlight_colors: Optional[List[str]] = []
     is_full_video_edit: Optional[bool] = True
     
     # It will be sent as it is in the webhook the goal is to identify the reuqest
-    metadata: Optional[Dict[str, str]] = {}
+    metadata: Optional[Dict[str, Any]] = {}
+    language_code: str = VideoSettings.DEFAULT_LANGUAGE_CODE
+
+    @field_validator("language_code")
+    def validate_language_code(cls, v):
+        if v not in VideoSettings.LANGUAGE_CODES:
+            raise ValueError(f"Unsupported language code '{v}'. Supported codes: {VideoSettings.LANGUAGE_CODES}")
+        return v
 
     @field_validator('max_words_per_subtitle')
     def validate_max_words_per_subtitle(cls, v):
@@ -66,22 +73,22 @@ class VideoEditRequest(BaseModel):
             raise ValueError(f"Font '{v}' is not available. Please provide the corresponding TTF file.")
         return v
     
-    @field_validator('highlighted_words')
-    def validate_highlighted_words(cls, v, values):
-        if v:
-            if isinstance(v, dict):
-                for word, color in v.items():
-                    if color is not None and (not isinstance(color, str) or not re.match(VideoSettings.COLOR_REGEX, color)):
-                        raise ValueError(f"Invalid color format: {color}. It must be in the format &HXXXXXX&")
-            elif isinstance(v, list):
-                for word in v:
-                    if not isinstance(word, str):
-                        raise ValueError("All items in the list must be strings.")
-                    if re.match(VideoSettings.COLOR_REGEX, word):
-                        raise ValueError(f"Invalid word: {word}. Words must not be color codes.")
-            else:
-                raise TypeError("highlighted_words must be either a dict or a list.")
-        return v
+    # @field_validator('highlighted_words')
+    # def validate_highlighted_words(cls, v, values):
+    #     if v:
+    #         if isinstance(v, dict):
+    #             for word, color in v.items():
+    #                 if color is not None and (not isinstance(color, str) or not re.match(VideoSettings.COLOR_REGEX, color)):
+    #                     raise ValueError(f"Invalid color format: {color}. It must be in the format &HXXXXXX&")
+    #         elif isinstance(v, list):
+    #             for word in v:
+    #                 if not isinstance(word, str):
+    #                     raise ValueError("All items in the list must be strings.")
+    #                 if re.match(VideoSettings.COLOR_REGEX, word):
+    #                     raise ValueError(f"Invalid word: {word}. Words must not be color codes.")
+    #         else:
+    #             raise TypeError("highlighted_words must be either a dict or a list.")
+    #     return v
 
     @field_validator('highlight_colors')
     def validate_highlight_colors(cls, v):
@@ -128,7 +135,7 @@ class WebhookVideo(BaseModel):
 class WebhookVideoResponse(BaseModel):
     message: str
     status_code: int
-    metadata: Optional[Dict[str, str]] = {}
+    metadata: Optional[Dict[str, Any]] = {}
     videos: Optional[List[WebhookVideo]] = None
 
 

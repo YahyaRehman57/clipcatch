@@ -52,7 +52,7 @@ class SubtitleService:
 
         audio = whisper.load_audio(output_audio_path)
         model = whisper.load_model(VideoSettings.WHISPER_MODEL, device="cpu")
-        result = whisper.transcribe(model, audio, language="en")
+        result = whisper.transcribe(model, audio, language=request.language_code)
 
         srt_lines = []
         counter = 1

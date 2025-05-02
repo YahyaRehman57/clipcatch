@@ -40,12 +40,22 @@ class VideoSettings:
         "Georgia",
     ]
 
-    # AI Prompts (to generate video content or effects)
-    AI_PROMPTS: dict = {
-        "thumbnail_generation": "Generate a thumbnail with the title and the best frame.",
-        "video_editing": "Edit the video by enhancing colors and trimming unnecessary scenes.",
-        "highlight_scene": "Highlight the key scenes with text overlays.",
-    }
+    DEFAULT_LANGUAGE_CODE = "en"
+
+    LANGUAGE_CODES = [
+        "en",    # English
+        "es",    # Spanish
+        "fr",    # French
+        "de",    # German
+        "it",    # Italian
+        "pt",    # Portuguese
+        "ru",    # Russian
+        "zh",    # Chinese
+        "ja",    # Japanese
+        "ko",    # Korean
+        "hi"     # Hindi
+    ]
+
 
     VIDEO_FILE = "video.mp4"
     TEMP_CLIPS_DIR = "temp/clips"
